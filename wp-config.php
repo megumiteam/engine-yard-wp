@@ -20,15 +20,17 @@
 // を使用し、必ず UTF-8 の BOM なし (UTF-8N) で保存してください。
 
 // ** MySQL 設定 - こちらの情報はホスティング先から入手してください。 ** //
-$database_yml = dirname(dirname(dirname(__FILE__))) .'/shared/config/database.yml';
+$database_yml = dirname(__FILE__) .'/config/database.yml';
 if (file_exists($database_yml)) {
 	$database_yml = file_get_contents($database_yml);
 	if (preg_match_all('#(database|username|password|host):[\s]*[\'"]([^\'"]+)[\'"]#i', $database_yml, $matched, PREG_SET_ORDER)) {
-		switch (strtolower($matched[1])){
-		case 'database': define('DB_NAME', $matched[2]); break;
-		case 'username': define('DB_USER', $matched[2]); break;
-		case 'password': define('DB_PASSWORD', $matched[2]); break;
-		case 'host':     define('DB_HOST', $matched[2]); break;
+		foreach ($matched as $match) {
+			switch (strtolower($match[1])){
+			case 'database': define('DB_NAME', $match[2]); break;
+			case 'username': define('DB_USER', $match[2]); break;
+			case 'password': define('DB_PASSWORD', $match[2]); break;
+			case 'host':     define('DB_HOST', $match[2]); break;
+			}
 		}
 	}
 	unset($matched);
